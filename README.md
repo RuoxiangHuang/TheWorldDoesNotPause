@@ -7,14 +7,13 @@
 Dynamic manipulation needs actions that are still right when they arrive. This repository is the official implementation of **Dynamic-LIBERO**, **Dynamic-RoboTwin**, and **PACE** (Policy Acceleration through Cached Execution), a training-free runtime for FastWAM and π₀.₅.
 
 <p align="center">
-  <img src="assets/teaser.png" alt="Teaser: the world keeps moving during inference, and PACE acts in time." width="100%">
+  <img src="assets/figure_v7.png" alt="Frozen-world evaluation versus real-time evaluation, and PACE versus the baseline." width="100%">
 </p>
 
 <p align="center">
   <em>
-  (a) The benchmarks let the world evolve during policy inference.
-  (b) PACE shortens inference so the action meets a moving target.
-  The reported rates are π₀.₅ on Dynamic-LIBERO at v₂.
+  (a) A frozen world hides the delay; the real-time benchmark keeps the target moving during inference.
+  (b) PACE reaches the moving target, with up to 3.8× speedup and a 40% success improvement.
   </em>
 </p>
 
