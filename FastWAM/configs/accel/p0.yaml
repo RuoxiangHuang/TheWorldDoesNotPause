@@ -1,0 +1,42 @@
+# @package _global_
+# Recommended encoder path: proven default stack + first-class `video_token_cache`.
+# Use this (or `accel=p1` / `accel=full`) when you want cross-replan video K/V
+# reuse on top of text+step+compile. A/B against `accel=default` to measure
+# whether reuse pays for itself on a given checkpoint / scene dynamics.
+accel:
+  enabled: true
+  verbose: true
+
+  text_cache:
+    enabled: true
+    max_entries: 64
+
+  step_cache:
+    enabled: true
+    threshold: 0.20
+    max_consecutive_skips: 2
+    cold_steps: 2
+
+  compile:
+    enabled: true
+    mode: reduce-overhead
+    # Prefer inductor without CUDA graphs: video_token_cache makes prefill
+    # intermittent, which thrashs reduce-overhead graphs.
+    prefill_mode: default
+    predict: true
+    prefill: true
+
+  video_token_cache:
+    enabled: true
+    full_reuse_threshold: 0.03
+    token_threshold: 0.05
+    max_refresh_ratio: 0.40
+    cold_replans: 1
+    max_consecutive_reuses: 8
+    force_refresh_every: 0
+
+  vae_cache:
+    enabled: false
+
+  obs_pipeline:
+    enabled: false

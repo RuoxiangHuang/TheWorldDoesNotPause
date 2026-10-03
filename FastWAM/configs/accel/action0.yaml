@@ -1,0 +1,42 @@
+# @package _global_
+# Action-side residual reuse on top of the proven default stack
+# (text_cache + step_cache + compile). Enables `chunk_residual_cache` for A/B
+# against `accel=default`. Residual hits short-circuit outside torch.compile;
+# miss path records R=h^L-h^0 via an instrumented eager MoT forward.
+accel:
+  enabled: true
+  verbose: true
+
+  text_cache:
+    enabled: true
+    max_entries: 64
+
+  step_cache:
+    enabled: true
+    threshold: 0.20
+    max_consecutive_skips: 2
+    cold_steps: 2
+
+  compile:
+    enabled: true
+    mode: reduce-overhead
+    predict: true
+    prefill: true
+
+  video_token_cache:
+    enabled: false
+
+  vae_cache:
+    enabled: false
+
+  obs_pipeline:
+    enabled: false
+
+  chunk_residual_cache:
+    enabled: true
+    condition_threshold: 0.05
+    action_latent_threshold: 0.15
+    cold_chunks: 1
+    max_consecutive_reuses: 4
+    force_refresh_every: 0
+    warm_steps: 0

@@ -1,0 +1,19 @@
+# Tiny smoke config (CPU registry tests + short GPU paired)
+protocol: real_time_v2
+suite:
+  task_names: [place_empty_cup]
+  seeds: [0]
+realtime:
+  policy_hz: 20
+  replan_steps: 8
+  backend: async
+  rails_collide: false
+dynamics:
+  modes: [contact_trigger, occlusion, contact_chain]
+  contact_switch: medium
+difficulty:
+  speeds: [0.0, 0.001]
+  trajectories:
+    - type: linear
+accel:
+  presets: [off, full]

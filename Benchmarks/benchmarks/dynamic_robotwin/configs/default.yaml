@@ -1,0 +1,75 @@
+# Dynamic-RoboTwin default experiment schema (official contract)
+protocol: real_time_v2
+task: robotwin_uncond_3cam_384_1e-4
+checkpoint: checkpoints/fastwam_release/robotwin_uncond_3cam_384.pt
+stats: checkpoints/fastwam_release/robotwin_uncond_3cam_384_dataset_stats.json
+robotwin_root: /DATA/YuanZhen/FastWAM/third_party/RoboTwin
+task_config: demo_clean
+
+suite:
+  task_names:
+    - place_empty_cup
+    - grab_roller
+    - move_playingcard_away
+    - move_pillbottle_pad
+    - place_phone_stand
+    - place_a2b_left
+    - handover_block
+    - handover_mic
+  # Bumper-car reconstructions are NOT in official `all`.
+  # CLI: --task-names recon  → unified catalog (15 skills × 5 ids).
+  #      seed / wave2 are aliases of recon (no separate batches).
+  seeds: [0, 1, 2, 3, 4]   # N=5 locked for official reports
+
+realtime:
+  policy_hz: 20
+  physics_per_tick: null      # null → auto-calibrate per episode from take_action
+  workspace_aabb: auto
+  release_radius: 0.12
+  replan_steps: 8
+  backend: async              # protocol default; freeze is ablation
+  num_inference_steps: 4
+  rails_collide: false        # primary: ghost sliding (PROTOCOL §8.1)
+  language_mode: keep         # primary; motion = B-track suffix
+
+# Paper-aligned Dynamic-RoboTwin stresses (see PROTOCOL.md §9).
+dynamics:
+  modes: [contact_trigger, occlusion, contact_chain]
+  contact_switch: medium
+  occlusion: true
+  occlusion_duty: 0.35
+  occlusion_period_ticks: 40
+  contact_chain: true
+  contact_chain_n_aux: 3
+  contact_chain_impulse: 0.35
+  secondary_rails: auto
+
+difficulty:
+  speeds: [0.0, 0.0005, 0.001, 0.002, 0.003, 0.004, 0.006, 0.010]
+  v_min: 0.0
+  v_max: 0.010
+  trajectories:
+    - type: linear
+    - type: sine
+      amplitude: 0.03
+      wavelength: 0.20
+  exploratory_trajectories:
+    - type: circle
+      radius: 0.04
+      omega: 0.03
+
+accel:
+  presets: [off, full]
+
+latency:
+  k: 8
+  warmup: 3
+
+working_points:
+  - {trajectory: linear, speed: 0.0}
+  - {trajectory: linear, speed: 0.001}
+  - {trajectory: linear, speed: 0.002}
+  - {trajectory: sine, speed: 0.001}
+
+metrics:
+  report: [sr, delta_sr, auc_sr, norm_auc_sr, v50, bootstrap_ci, bwr, pursuit_lag]

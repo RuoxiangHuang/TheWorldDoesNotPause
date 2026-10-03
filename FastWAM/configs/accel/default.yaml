@@ -1,0 +1,76 @@
+# @package _global_
+# Recommended operating point: ~3.9x per-replan on LIBERO (10 NFE), ~2.9x on
+# RoboTwin/DOMINO (4 NFE), action relative-L1 deviation ~0.007, no measured
+# closed-loop success-rate regression.
+#
+# Named modes:
+#   accel=baseline     reference path (alias of off)
+#   accel=pace         PACE: text + step + compile (accel=ours is the same stack)
+#   accel=action0      PACE plus cross-chunk residual reuse
+#   accel=full         encoder caches + residual + step cache
+#
+# Core controllers:
+#   ON  by default: text_cache, step_cache, compile
+#   OFF by default: video_token_cache, vae_cache, obs_pipeline, chunk_residual_cache
+#     → enable via accel=p0 (video), accel=p1 (video+vae), accel=action0, accel=full
+#
+# Only the inference path is affected. `create_fastwam` records this block on
+# the model; `prepare_for_inference` is what installs it, so training runs are
+# untouched regardless of what is set here.
+accel:
+  enabled: true
+  verbose: true
+
+  # Exact: the prompt is constant within an episode.
+  text_cache:
+    enabled: true
+    max_entries: 64
+
+  # Near-lossless: holds the last velocity while the action latent has barely
+  # moved. threshold 0.2-0.3 skips ~50% of denoise steps.
+  step_cache:
+    enabled: true
+    threshold: 0.20
+    max_consecutive_skips: 2
+    cold_steps: 2
+
+  # Lossless: the action step is launch-bound, not compute-bound.
+  compile:
+    enabled: true
+    mode: reduce-overhead
+    predict: true
+    prefill: true
+    # When enabling video_token_cache (p0/p1/full), set prefill_mode=default so
+    # intermittent full prefill does not thrash reduce-overhead CUDA graphs.
+
+  # Core encoder controller (near-lossless): cross-replan video K/V reuse +
+  # sparse token refresh. Kept off here so `default` stays the measured
+  # text+step+compile stack; turn on with accel=p0 / p1 / full.
+  # See doc/video_token_cache.md and evaluate_results/accel_p0_bench/.
+  video_token_cache:
+    enabled: false
+    full_reuse_threshold: 0.03
+    token_threshold: 0.05
+    max_refresh_ratio: 0.40
+    cold_replans: 1
+    max_consecutive_reuses: 8
+    force_refresh_every: 0
+
+  # P1 encoder modules (see doc/p1.md). Off in default; on in p1 / full.
+  vae_cache:
+    enabled: false
+
+  obs_pipeline:
+    enabled: false
+
+  # Cross-chunk residual reuse. Off in pace/default; on in action0 / full.
+  # See doc/chunk_residual_cache.md and doc/action_accel_design.md.
+  chunk_residual_cache:
+    enabled: false
+    condition_threshold: 0.05
+    action_latent_threshold: 0.15
+    cold_chunks: 1
+    max_consecutive_reuses: 4
+    force_refresh_every: 0
+    warm_steps: 0
+    max_cache_step: -1

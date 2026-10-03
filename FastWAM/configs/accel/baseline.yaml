@@ -1,0 +1,5 @@
+# @package _global_
+# Reference path: bit-exact original FastWAM inference. Named alias of `off`.
+# Reference path. Paper name: Baseline. Alias of accel=off.
+accel:
+  enabled: false

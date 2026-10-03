@@ -1,0 +1,87 @@
+# Dynamic-LIBERO default experiment schema (official contract)
+protocol: real_time_v2
+task: libero_uncond_2cam224_1e-4
+checkpoint: checkpoints/fastwam_release/libero_uncond_2cam224.pt
+stats: checkpoints/fastwam_release/libero_uncond_2cam224_dataset_stats.json
+
+suite:
+  # Single-suite default; use eval/run_suite.py or run_official.py for multi-suite.
+  name: libero_object
+  trained_suites: [libero_spatial, libero_object, libero_goal, libero_10]
+  task_ids: all
+  init_ids: [0, 1, 2, 3, 4]   # N=5 locked for official reports
+
+realtime:
+  control_freq: 20          # Hz; n_freeze = latency_s * control_freq (fractional)
+  release_radius: 0.06      # m; proximity release from rails
+  max_steps: 400
+  num_steps_wait: 30
+  replan_steps: 10
+  backend: async            # protocol default; freeze is ablation
+  workspace_aabb: [[-0.45, -0.45, -0.02], [0.45, 0.45, 0.40]]  # floor (libero_object) only; kitchen/table use workspace.py
+
+appearance:
+  movers: off               # primary track: original LIBERO meshes
+  mover_language: keep
+  language_mode: keep       # primary; motion = B-track suffix
+  target_registry: true     # always use MoverSpec rails targets
+
+difficulty:
+  speeds: [0.0, 0.0005, 0.001, 0.002, 0.003, 0.004, 0.006, 0.010]
+  v_min: 0.0
+  v_max: 0.010
+  # Optional preset axis (CLI: --traj-complexity). none → use trajectories[] / --trajectory.
+  traj_complexity: none   # none | easy | medium | hard | chaotic
+  # Official required trajectories
+  trajectories:
+    - type: linear
+      axis: x
+      direction: 1.0
+    - type: sine
+      axis: x
+      direction: 1.0
+      amplitude: 0.03
+      wavelength: 0.20
+  # Exploratory (not required for official reports)
+  exploratory_trajectories:
+    - type: circle
+      radius: 0.04
+      omega: 0.03
+    - type: polyline
+      waypoints: [[0, 0, 0], [0.08, 0, 0], [0.08, 0.06, 0]]
+    - type: stop_and_go
+      axis: x
+      direction: 1.0
+      duty: 0.6
+      period: 40
+    - type: random
+      n_waypoints: 5
+      extent: 0.12
+      seed: 0
+    # Diagnostic slice only (PROTOCOL §13). Do not add to official trajectories.
+    - type: smooth_turn
+      axis: x
+      turn_angle_deg: 75
+      turn_duration_ticks: 12
+      event_t_lo: 20
+      event_t_hi: 60
+
+accel:
+  presets: [off, full]      # pair at least off vs full; optional default/action0
+  num_inference_steps: 4
+
+latency:
+  k: 8
+  warmup: 3
+  # fixed_latency: null     # seconds; if set, skip measurement
+
+working_points:
+  # Protocol default backend is async at every speed, including v=0.
+  # v=0.0006 is the paper latency-slice working cell (not the official 60 grid).
+  - {trajectory: linear, speed: 0.0}
+  - {trajectory: linear, speed: 0.0006}
+  - {trajectory: linear, speed: 0.001}
+  - {trajectory: sine, speed: 0.001}
+
+metrics:
+  report: [sr, delta_sr, auc_sr, norm_auc_sr, v50, bootstrap_ci, bwr, pursuit_lag]

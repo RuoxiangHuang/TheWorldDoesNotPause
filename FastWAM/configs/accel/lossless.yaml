@@ -1,0 +1,38 @@
+# @package _global_
+# Only the controllers that do not approximate anything: prompt memoization is
+# exact and torch.compile preserves the numerics (relative-L1 ~5e-3, below the
+# bf16 noise floor of the reference path). Every denoise step still runs.
+#
+# Roughly 2.2-2.4x instead of the ~3.9x of `default`. Worth choosing when a
+# result must be attributable to the model rather than to step skipping.
+accel:
+  enabled: true
+  verbose: true
+
+  text_cache:
+    enabled: true
+    max_entries: 64
+
+  step_cache:
+    enabled: false
+
+  compile:
+    enabled: true
+    mode: reduce-overhead
+    predict: true
+    prefill: true
+
+  video_token_cache:
+    enabled: false
+    full_reuse_threshold: 0.03
+    token_threshold: 0.05
+    max_refresh_ratio: 0.40
+    cold_replans: 1
+    max_consecutive_reuses: 8
+    force_refresh_every: 0
+
+  vae_cache:
+    enabled: false
+
+  obs_pipeline:
+    enabled: false

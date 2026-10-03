@@ -1,0 +1,35 @@
+# @package _global_
+# Locked alias of accel=pace. Kept so existing commands that pass
+# accel=ours still load the FastWAM PACE stack (compile + text_cache + step_cache).
+accel:
+  enabled: true
+  verbose: true
+
+  text_cache:
+    enabled: true
+    max_entries: 64
+
+  step_cache:
+    enabled: true
+    threshold: 0.20
+    max_consecutive_skips: 2
+    cold_steps: 2
+
+  compile:
+    enabled: true
+    mode: reduce-overhead
+    predict: true
+    prefill: true
+
+  video_token_cache:
+    enabled: false
+
+  vae_cache:
+    enabled: false
+
+  obs_pipeline:
+    enabled: false
+
+  chunk_residual_cache:
+    enabled: false
+

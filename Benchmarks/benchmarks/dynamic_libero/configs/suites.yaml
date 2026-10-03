@@ -1,0 +1,46 @@
+# Full-suite Dynamic-LIBERO preset (libero_uncond_2cam224 release ckpt)
+protocol: real_time_v2
+task: libero_uncond_2cam224_1e-4
+checkpoint: checkpoints/fastwam_release/libero_uncond_2cam224.pt
+stats: checkpoints/fastwam_release/libero_uncond_2cam224_dataset_stats.json
+
+# Four suites in training data; libero_90 is optional OOD eval.
+suites:
+  trained:
+    - libero_spatial
+    - libero_object
+    - libero_goal
+    - libero_10
+  all:
+    - libero_spatial
+    - libero_object
+    - libero_goal
+    - libero_10
+    - libero_90
+
+eval:
+  task_ids: all          # 10 per suite (90 for libero_90)
+  init_ids: [0, 1, 2, 3, 4]
+  trajectory: linear
+  speed: 0.001
+  accels: [off, full]
+  movers: off
+  mover_language: keep
+  target_registry: true
+  backend: async
+
+realtime:
+  control_freq: 20
+  release_radius: 0.06
+  max_steps: 400
+  replan_steps: 10
+  backend: async
+
+latency:
+  k: 8
+  warmup: 3
+
+# Smoke (fast): --suites trained --task-ids 0 --init-ids 0,1
+# Full trained:  --suites trained --task-ids all --init-ids 0,1,2,3,4
+# Full + OOD:    --suites all --task-ids all --init-ids 0,1,2,3,4
+# Official:      python -m benchmarks.dynamic_libero.eval.run_official --mode suite

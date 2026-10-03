@@ -1,0 +1,5 @@
+# @package _global_
+# Reference path: bit-exact original FastWAM inference. Use this as the baseline
+# when measuring speedup or attributing a behaviour change to acceleration.
+accel:
+  enabled: false

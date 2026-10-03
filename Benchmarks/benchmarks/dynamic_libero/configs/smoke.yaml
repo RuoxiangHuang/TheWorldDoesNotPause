@@ -1,0 +1,24 @@
+# Tiny smoke config (CPU trajectory tests + short GPU paired)
+protocol: real_time_v2
+suite:
+  name: libero_object
+  task_ids: [0]
+  init_ids: [0]
+appearance:
+  movers: off
+  mover_language: keep
+  target_registry: true
+difficulty:
+  speeds: [0.0, 0.003]
+  trajectories:
+    - type: linear
+      axis: x
+      direction: 1.0
+accel:
+  presets: [off, full]
+  num_inference_steps: 4
+realtime:
+  max_steps: 200
+  release_radius: 0.06
+  backend: async
+  replan_steps: 10

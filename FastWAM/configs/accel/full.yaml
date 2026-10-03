@@ -1,0 +1,57 @@
+# @package _global_
+# Full acceleration stack: every AccelController that the package ships.
+# Prefer `accel=default` for the proven text+step+compile operating point,
+# `accel=p0` / `accel=p1` when A/B'ing encoder caches, and `accel=action0` for
+# chunk_residual_cache alone. Use `full` when you want encoder caches +
+# obs_pipeline + chunk_residual_cache together (runner must drive
+# obs_pipeline.prefetch for the async path to hide encode latency).
+accel:
+  enabled: true
+  verbose: true
+
+  text_cache:
+    enabled: true
+    max_entries: 64
+
+  step_cache:
+    enabled: true
+    threshold: 0.20
+    max_consecutive_skips: 2
+    cold_steps: 2
+
+  compile:
+    enabled: true
+    mode: reduce-overhead
+    # video_token_cache makes full prefill intermittent; keep CUDA graphs off
+    # the prefill path (same constraint as accel=p0 / p1).
+    prefill_mode: default
+    predict: true
+    prefill: true
+
+  video_token_cache:
+    enabled: true
+    full_reuse_threshold: 0.03
+    token_threshold: 0.05
+    max_refresh_ratio: 0.40
+    cold_replans: 1
+    max_consecutive_reuses: 8
+    force_refresh_every: 0
+
+  vae_cache:
+    enabled: true
+    threshold: 0.015
+    cold_calls: 1
+    max_consecutive_hits: 8
+    force_refresh_every: 0
+
+  obs_pipeline:
+    enabled: true
+
+  chunk_residual_cache:
+    enabled: true
+    condition_threshold: 0.05
+    action_latent_threshold: 0.15
+    cold_chunks: 1
+    max_consecutive_reuses: 4
+    force_refresh_every: 0
+    warm_steps: 0

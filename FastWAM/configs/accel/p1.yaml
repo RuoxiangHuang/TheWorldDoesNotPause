@@ -1,0 +1,42 @@
+# @package _global_
+# Encoder stack: p0 (video_token_cache) + vae_cache. obs_pipeline stays off here
+# (needs a runner to drive prefetch); use accel=full to enable it too.
+accel:
+  enabled: true
+  verbose: true
+
+  text_cache:
+    enabled: true
+    max_entries: 64
+
+  step_cache:
+    enabled: true
+    threshold: 0.20
+    max_consecutive_skips: 2
+    cold_steps: 2
+
+  compile:
+    enabled: true
+    mode: reduce-overhead
+    prefill_mode: default
+    predict: true
+    prefill: true
+
+  video_token_cache:
+    enabled: true
+    full_reuse_threshold: 0.03
+    token_threshold: 0.05
+    max_refresh_ratio: 0.40
+    cold_replans: 1
+    max_consecutive_reuses: 8
+    force_refresh_every: 0
+
+  vae_cache:
+    enabled: true
+    threshold: 0.015
+    cold_calls: 1
+    max_consecutive_hits: 8
+    force_refresh_every: 0
+
+  obs_pipeline:
+    enabled: false

@@ -1,0 +1,76 @@
+# @package _global_
+#
+# DOMINO evaluation (arXiv:2603.15620) — a RoboTwin-2.0 dynamic superset.
+#
+# Two modes, selected by `EVALUATION.n_frozen`:
+#
+#   n_frozen: 0   DOMINO as shipped. The simulator pauses during inference, so
+#                 latency is invisible to success rate and a lossless speedup is
+#                 expected to be SR-neutral. Use this to measure latency.
+#   n_frozen: >0  Latency-coupled. Every replan advances the dynamic object by
+#                 n_frozen extra "blind" policy steps, i.e. the object keeps
+#                 sliding while the policy thinks. This is the real-robot
+#                 condition, where a faster policy catches what a slower one
+#                 misses. Set it from each configuration's MEASURED latency:
+#                 n_frozen = round(latency_s * control_hz).
+#
+# Acceleration comes from the `accel` group (accel=default | lossless | off).
+
+defaults:
+  - /train
+  - override /task: robotwin_uncond_3cam_384_1e-4
+  - _self_
+
+ckpt: null
+gpu_id: 0
+
+model:
+  load_text_encoder: true
+  skip_dit_load_from_pretrain: true
+  action_dit_pretrained_path: null
+
+EVALUATION:
+  # The DOMINO checkout (a RoboTwin-2.0 fork with the dynamic tasks).
+  domino_root: /DATA/YuanZhen/DOMINO
+  # Must not collide with the `fasterwam` package name: DOMINO imports the policy
+  # by bare module name, and the installed package would shadow it.
+  policy_name: fasterwam_policy
+  task_name: null
+  task_config: demo_clean_dynamic
+  instruction_type: unseen
+  eval_num_episodes: 12
+  output_dir: ./evaluate_results/domino/${hydra:runtime.choices.task}/${now:%Y%m%d_%H%M%S}
+
+  # Action inference. The released RoboTwin checkpoint was evaluated at 4 NFE
+  # with a 8-step replan interval.
+  action_horizon: null
+  replan_steps: 8
+  num_inference_steps: 4
+  sigma_shift: null
+  text_cfg_scale: 1.0
+  negative_prompt: ""
+  rand_device: cpu
+  tiled: false
+  timing_enabled: true
+
+  # Latency coupling. 0 disables the injection entirely.
+  n_frozen: 0
+  control_hz: 20
+  # Replans to exclude from the latency measurement. torch.compile pays for
+  # tracing and cudagraph capture up front, and that cost must not leak into the
+  # steady-state latency that n_frozen is derived from.
+  latency_warmup_replans: 5
+
+  # Native speed of the dynamic object. null keeps the task_config value.
+  dynamic_coefficient: null
+
+  # Runtime inputs
+  dataset_stats_path: null
+  device: cuda
+
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: .
+  output_subdir: null
