@@ -36,7 +36,7 @@ Across the two benchmarks and two policies, PACE speeds inference by up to 3.8×
 |---|---:|---|
 | Dynamic-LIBERO | 50 | single-arm LIBERO skills; pick, place, and both, including curved paths |
 | Dynamic-RoboTwin | 45 | dual-arm RoboTwin skills; pick, place, and both |
-| Extra appendix | 5 | intercept, chase, and physics demos; not part of the 95 |
+| Extra appendix | 5 | intercept, chase, and a physics demo; not part of the 95 |
 
 The shared protocol is `real_time_v2`: the world keeps moving while the policy thinks, and success uses the original checker.
 
@@ -46,6 +46,35 @@ The shared protocol is `real_time_v2`: the world keeps moving while the policy t
 
 <p align="center">
   <em>Task examples and the observation-to-action delay.</em>
+</p>
+
+## Extra demos
+
+Five Dynamic-RoboTwin appendix tasks. They use the same real-time protocol and stay outside the 95-task table. Click a clip for the full video.
+
+<p align="center">
+  <a href="assets/extra/catch_shuttlecock.mp4"><img src="assets/extra/catch_shuttlecock.gif" alt="Catch the flying shuttlecock." width="78%"></a>
+  <br><em>Catch the flying shuttlecock.</em>
+</p>
+
+<p align="center">
+  <a href="assets/extra/catch_bunny.mp4"><img src="assets/extra/catch_bunny.gif" alt="Catch the hopping bunny toy." width="78%"></a>
+  <br><em>Catch the hopping bunny toy.</em>
+</p>
+
+<p align="center">
+  <a href="assets/extra/stop_rolling_orange.mp4"><img src="assets/extra/stop_rolling_orange.gif" alt="Stop the rolling orange." width="78%"></a>
+  <br><em>Stop the orange from rolling off.</em>
+</p>
+
+<p align="center">
+  <a href="assets/extra/pursue_toycar.mp4"><img src="assets/extra/pursue_toycar.gif" alt="Pursue the toy car." width="78%"></a>
+  <br><em>Pursue the toy car.</em>
+</p>
+
+<p align="center">
+  <a href="assets/extra/collide_pool_balls.mp4"><img src="assets/extra/collide_pool_balls.gif" alt="Collide the pool balls." width="78%"></a>
+  <br><em>Collide the pool balls.</em>
 </p>
 
 ---
@@ -96,7 +125,7 @@ PACE places change-gated shortcuts on the inference path. Visual and text reuse 
 ## Installation
 
 ```bash
-git clone <repo-url> TheWorldDoesNotPause
+git clone https://github.com/RuoxiangHuang/TheWorldDoesNotPause.git
 cd TheWorldDoesNotPause
 export PYTHONPATH="$PWD/FastWAM/src:$PWD/Benchmarks:$PWD/pi05"
 export MUJOCO_GL=egl
