@@ -1,6 +1,6 @@
-# Official Implementation of The World Does Not Pause
+# The World Does Not Pause: Real-Time Benchmarks and Training-Free Acceleration for Dynamic Manipulation
 
-**The World Does Not Pause: Real-Time Benchmarks and Training-Free Acceleration for Dynamic Manipulation**
+**Official Implementation of The World Does Not Pause**
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
