@@ -1,5 +1,13 @@
 # FastWAM
 
-论文中的 FastWAM 策略。PACE 在本目录，配置名是 `accel=pace`（`accel=ours` 为同一栈的别名）：指令表示缓存 `text_cache`、chunk 内速度复用 `step_cache`。
+Import name: `fasterwam`.
 
-导入名仍是 `fasterwam`。评测入口在上一级的 Dynamic-LIBERO 与 Dynamic-RoboTwin。说明见 [../README.md](../README.md)。
+| Preset | Stack |
+|---|---|
+| `accel=pace` | `text_cache` + `step_cache` |
+| `accel=ours` | same as `pace` |
+| `accel=baseline` | reference path; eval CLI name `off` |
+
+Other presets: `p0`, `p1`, `action0`, `full`.
+
+Eval entry points are Dynamic-LIBERO and Dynamic-RoboTwin. See [../README.md](../README.md).
