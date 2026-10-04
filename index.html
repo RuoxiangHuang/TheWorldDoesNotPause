@@ -12,14 +12,17 @@
       --blue: #1d4e89;
       --blue-soft: #e8f1fb;
       --orange: #c65a12;
-      --paper: #f6f7f9;
+      --paper: #f4f6f8;
+      --shadow: 0 16px 40px rgba(23, 32, 51, 0.06);
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
       color: var(--ink);
-      background: var(--paper);
+      background:
+        radial-gradient(900px 420px at 50% -80px, #fff 0%, rgba(255, 255, 255, 0) 70%),
+        var(--paper);
       font-family: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
       line-height: 1.55;
     }
@@ -32,18 +35,19 @@
       justify-content: space-between;
       gap: 16px;
       align-items: center;
-      padding: 14px 28px;
-      background: rgba(246, 247, 249, 0.94);
-      border-bottom: 1px solid var(--line);
-      backdrop-filter: blur(8px);
+      padding: 14px 32px;
+      background: rgba(255, 255, 255, 0.9);
+      border-bottom: 1px solid rgba(228, 233, 240, 0.9);
+      backdrop-filter: blur(12px);
       font-family: "Segoe UI", Helvetica, Arial, sans-serif;
       font-size: 14px;
     }
     .nav strong { letter-spacing: 0.01em; }
     .nav nav { display: flex; gap: 18px; flex-wrap: wrap; }
     .nav a { color: var(--ink); text-decoration: none; }
-    .wrap { width: min(1080px, calc(100% - 40px)); margin: 0 auto; }
-    header.hero { padding: 52px 0 8px; text-align: center; }
+    .nav a:hover { color: var(--blue); }
+    .wrap { width: min(1080px, calc(100% - 48px)); margin: 0 auto; }
+    header.hero { padding: 64px 0 12px; text-align: center; }
     .kicker {
       margin: 0 0 12px;
       font-family: "Segoe UI", Helvetica, Arial, sans-serif;
@@ -87,28 +91,54 @@
       top: -0.15em;
     }
     .affil, .contrib {
-      margin: 8px auto 0;
-      max-width: 44em;
+      margin: 10px auto 0;
+      max-width: 46em;
       font-family: "Segoe UI", Helvetica, Arial, sans-serif;
       font-size: 14px;
       color: var(--muted);
     }
+    .affil {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.35em 0.15em;
+    }
+    .affil span:not(:last-child)::after {
+      content: "·";
+      margin-left: 0.55em;
+      color: #b7c2d0;
+    }
     .affil sup { font-size: 0.75em; }
-    .affil span { margin: 0 0.45em; white-space: nowrap; }
-    .links { display: flex; justify-content: center; gap: 10px; margin: 22px 0 4px; }
+    .affil span { white-space: nowrap; }
+    .links { display: flex; justify-content: center; gap: 10px; margin: 26px 0 6px; }
     .links a {
       font-family: "Segoe UI", Helvetica, Arial, sans-serif;
       text-decoration: none;
       color: white;
       background: var(--blue);
       border-radius: 999px;
-      padding: 8px 16px;
+      padding: 9px 18px;
       font-size: 14px;
+      display: inline-block;
+      box-shadow: 0 6px 16px rgba(29, 78, 137, 0.18);
     }
-    .links a.alt { background: var(--orange); }
-    figure { margin: 28px 0 8px; }
+    .links a.alt {
+      color: var(--orange);
+      background: white;
+      border: 1px solid #f0d3c2;
+      box-shadow: none;
+    }
+    .links a:hover { transform: translateY(-1px); }
+    figure {
+      margin: 32px 0 10px;
+      padding: 12px 12px 16px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+    }
     img, video { width: 100%; height: auto; display: block; background: white; }
-    img { image-rendering: auto; }
+    figure img, .demo video { border-radius: 10px; }
     figcaption, .note {
       color: var(--muted);
       font-family: "Segoe UI", Helvetica, Arial, sans-serif;
@@ -117,13 +147,22 @@
       margin: 10px auto 0;
       max-width: 46em;
     }
-    section { padding: 36px 0 8px; }
+    section { padding: 64px 0 8px; scroll-margin-top: 72px; }
     h2 {
-      font-size: 30px;
-      margin: 0 0 14px;
+      font-size: 32px;
+      margin: 0 0 18px;
       font-weight: 600;
       text-align: center;
+      letter-spacing: -0.02em;
     }
+    h3 {
+      margin: 28px 0 14px;
+      font-size: 24px;
+      font-weight: 600;
+      text-align: center;
+      letter-spacing: -0.015em;
+    }
+    #real { margin-top: 36px; }
     .prose {
       max-width: 46em;
       margin: 0 auto 8px;
@@ -140,9 +179,12 @@
       background: white;
       border: 1px solid var(--line);
       border-radius: 16px;
-      padding: 18px 16px 14px;
+      padding: 20px 16px 16px;
       text-align: center;
+      box-shadow: var(--shadow);
     }
+    .stat:nth-child(2) b { color: #1a6b45; }
+    .stat:nth-child(3) b { color: var(--orange); }
     .stat b {
       display: block;
       font-size: 32px;
@@ -166,6 +208,7 @@
       border: 1px solid var(--line);
       border-radius: 16px;
       overflow: hidden;
+      box-shadow: var(--shadow);
     }
     .demo p {
       margin: 0;
@@ -179,7 +222,8 @@
       background: white;
       border: 1px solid var(--line);
       border-radius: 16px;
-      margin-top: 18px;
+      margin-top: 22px;
+      box-shadow: var(--shadow);
     }
     table {
       width: 100%;
@@ -203,6 +247,7 @@
       padding-top: 12px;
     }
     tr.ours td { background: var(--blue-soft); font-weight: 650; }
+    tr.ours td:first-child { box-shadow: inset 3px 0 0 var(--blue); }
     caption {
       caption-side: bottom;
       text-align: center;
@@ -220,7 +265,9 @@
       line-height: 1.45;
     }
     footer {
-      padding: 28px 0 48px;
+      margin-top: 28px;
+      padding: 22px 0 48px;
+      border-top: 1px solid var(--line);
       color: var(--muted);
       font-family: "Segoe UI", Helvetica, Arial, sans-serif;
       font-size: 13px;
@@ -239,8 +286,7 @@
       <a href="#abstract">Abstract</a>
       <a href="#benchmarks">Benchmarks</a>
       <a href="#framework">Framework</a>
-      <a href="#results">Main Results</a>
-      <a href="#real">Real World</a>
+      <a href="#experiments">Experiments</a>
       <a href="#demos">Demos</a>
       <a href="#citation">Cite</a>
     </nav>
@@ -306,8 +352,10 @@
     </figure>
   </section>
 
-  <section id="results" class="wrap">
-    <h2>Main Results</h2>
+  <section id="experiments" class="wrap">
+    <h2>Experiments</h2>
+    <div id="results">
+    <h3>Main Results</h3>
     <div class="prose">
       <p>PACE has the lowest mean inference latency in all four policy–benchmark pairs, and the highest success in all eight moving-target settings. The largest gain is FastWAM on Dynamic-LIBERO: latency falls from 598.6 ms to 159.1 ms, and success at <em>v</em><sub>1</sub> rises from 0.2% to 43.0%.</p>
     </div>
@@ -350,10 +398,10 @@
       <img src="assets/sr_curves.svg" alt="Success and latency across target speeds.">
       <figcaption>Task success (solid) and mean model latency (dashed) as target speed increases. Bands are 95% task-stratified bootstrap intervals.</figcaption>
     </figure>
-  </section>
+    </div>
 
-  <section id="real" class="wrap">
-    <h2>Real World</h2>
+    <div id="real">
+    <h3>Real World Experiment</h3>
     <div class="prose">
       <p>On an AgileX Piper arm, π<sub>0.5</sub> runs box stacking, cup placing, and box fetching, each in a static and a dynamic variant. The same weights are used. PACE shortens each inference stall from 159 ms to 69 ms, and dynamic success counts match or exceed the baseline.</p>
     </div>
@@ -361,6 +409,7 @@
       <img src="assets/realworld.svg" alt="Real-world tasks and inference stalls.">
       <figcaption>Static and dynamic variants of T1–T3. Cyan is robot execution; yellow is the inference stall.</figcaption>
     </figure>
+    </div>
   </section>
 
   <section id="demos" class="wrap">
