@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The World Does Not Pause</title>
+  <style>
+    :root {
+      --ink: #1a2332;
+      --muted: #5c6b80;
+      --line: #e4e9f0;
+      --blue: #1d4e89;
+      --blue-soft: #e8f1fb;
+      --orange: #c65a12;
+      --paper: #f6f7f9;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+      line-height: 1.55;
+    }
+    a { color: var(--blue); }
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 28px;
+      background: rgba(246, 247, 249, 0.94);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+      font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+    }
+    .nav strong { letter-spacing: 0.01em; }
+    .nav nav { display: flex; gap: 18px; flex-wrap: wrap; }
+    .nav a { color: var(--ink); text-decoration: none; }
+    .wrap { width: min(1080px, calc(100% - 40px)); margin: 0 auto; }
+    header.hero { padding: 52px 0 8px; text-align: center; }
+    .kicker {
+      margin: 0 0 12px;
+      font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--orange);
+    }
+    h1 {
+      margin: 0 auto;
+      max-width: none;
+      font-size: clamp(48px, 6.4vw, 80px);
+      line-height: 1.05;
+      font-weight: 650;
+      letter-spacing: -0.035em;
+    }
+    .subtitle {
+      margin: 16px auto 0;
+      max-width: 22em;
+      font-size: clamp(18px, 2vw, 24px);
+      line-height: 1.35;
+      font-weight: 500;
+      color: #3e4d63;
+    }
+    .authors {
+      margin: 22px auto 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 0.4em 1.25em;
+      font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 18px;
+    }
+    .authors .person { display: flex; flex-direction: column; align-items: center; white-space: nowrap; }
+    .authors .role {
+      margin-bottom: 3px;
+      font-size: 12px;
+      line-height: 1.2;
+      letter-spacing: 0.04em;
+      color: var(--orange);
+    }
+    .authors sup { font-size: 0.68em; line-height: 0; }
+    .affil, .contrib {
+      margin: 8px auto 0;
+      max-width: 44em;
+      font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .affil sup { font-size: 0.75em; }
+    .affil span { margin: 0 0.45em; white-space: nowrap; }
+    .links { display: flex; justify-content: center; gap: 10px; margin: 22px 0 4px; }
+    .links a {
+      font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+      text-decoration: none;
+      color: white;
+      background: var(--blue);
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+    .links a.alt { background: var(--orange); }
+    figure { margin: 28px 0 8px; }
+    img, video { width: 100%; height: auto; display: block; background: white; }
+    img { image-rendering: auto; }
+    figcaption, .note {
+      color: var(--muted);
+      font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      text-align: center;
+      margin: 10px auto 0;
+      max-width: 46em;
+    }
+    section { padding: 36px 0 8px; }
+    h2 {
+      font-size: 30px;
+      margin: 0 0 14px;
+      font-weight: 600;
+      text-align: center;
+    }
+    .prose {
+      max-width: 46em;
+      margin: 0 auto 8px;
+      font-size: 18px;
+    }
+    .prose p { margin: 0 0 12px; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 22px 0 8px;
+    }
+    .stat {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px 16px 14px;
+      text-align: center;
+    }
+    .stat b {
+      display: block;
+      font-size: 32px;
+      line-height: 1.1;
+      color: var(--blue);
+    }
+    .stat span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+    }
+    .demos {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .demo {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .demo p {
+      margin: 0;
+      padding: 10px 12px 12px;
+      text-align: center;
+      font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+    }
+    .table-scroll {
+      overflow-x: auto;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      margin-top: 18px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+    th, td { padding: 8px 12px; text-align: center; white-space: nowrap; }
+    th {
+      background: #f3f6fa;
+      font-weight: 600;
+      border-bottom: 1px solid var(--line);
+    }
+    td { border-bottom: 1px solid #eef2f6; }
+    td.left, th.left { text-align: left; }
+    tr.group td {
+      background: #f7f8fa;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+      padding-top: 12px;
+    }
+    tr.ours td { background: var(--blue-soft); font-weight: 650; }
+    caption {
+      caption-side: bottom;
+      text-align: center;
+      color: var(--muted);
+      padding: 12px 16px 14px;
+      font-size: 13px;
+    }
+    pre {
+      background: #121826;
+      color: #e8eef8;
+      border-radius: 14px;
+      padding: 16px 18px;
+      overflow: auto;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    footer {
+      padding: 28px 0 48px;
+      color: var(--muted);
+      font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      text-align: center;
+    }
+    @media (max-width: 800px) {
+      .stats, .demos { grid-template-columns: 1fr; }
+      .nav { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <strong>The World Does Not Pause</strong>
+    <nav>
+      <a href="#abstract">Abstract</a>
+      <a href="#benchmarks">Benchmarks</a>
+      <a href="#framework">Framework</a>
+      <a href="#results">Main Results</a>
+      <a href="#real">Real World</a>
+      <a href="#demos">Demos</a>
+      <a href="#citation">Cite</a>
+    </nav>
+  </div>
+
+  <header class="hero wrap">
+    <h1>The World Does Not Pause</h1>
+    <p class="subtitle">Real-Time Benchmarks and Training-Free Acceleration for Dynamic Manipulation</p>
+    <p class="authors">
+      <span class="person"><span class="role">Project Lead</span>Ruoxiang Huang<sup>1*</sup></span>
+      <span class="person">Zhen Yuan<sup>2*</sup></span>
+      <span class="person">Guanqi He<sup>4</sup></span>
+      <span class="person">Taku Komura<sup>2</sup></span>
+      <span class="person">Ruihai Wu<sup>3†</sup></span>
+    </p>
+    <p class="affil">
+      <span><sup>1</sup>Peking University</span>
+      <span><sup>2</sup>The University of Hong Kong</span>
+      <span><sup>3</sup>UC Berkeley</span>
+      <span><sup>4</sup>Wuji Technology</span>
+    </p>
+    <p class="contrib">*Equal contribution &nbsp;&nbsp; †Corresponding author</p>
+    <div class="links">
+      <a href="https://github.com/RuoxiangHuang/TheWorldDoesNotPause">Code</a>
+      <a class="alt" href="#citation">BibTeX</a>
+    </div>
+    <figure>
+      <img src="assets/figure_v7.png" alt="Frozen-world evaluation versus real-time evaluation, and PACE versus the baseline.">
+      <figcaption>A frozen world hides the delay. The real-time benchmark keeps the target moving during inference. PACE reaches the moving target.</figcaption>
+    </figure>
+    <div class="stats">
+      <div class="stat"><b>3.8×</b><span>faster inference</span></div>
+      <div class="stat"><b>+42.8 pp</b><span>dynamic task success</span></div>
+      <div class="stat"><b>159 → 69 ms</b><span>real-robot stall per chunk</span></div>
+    </div>
+  </header>
+
+  <section id="abstract" class="wrap">
+    <h2>Abstract</h2>
+    <div class="prose">
+      <p>Dynamic manipulation requires timely actions as the world continues to evolve during policy inference. In vision-language-action models and world action models, inference latency can leave actions conditioned on outdated observations.</p>
+      <p>We introduce <strong>Dynamic-LIBERO</strong> and <strong>Dynamic-RoboTwin</strong>, which combine controlled target motion with inference-time world evolution while largely preserving established task goals for frozen-policy evaluation. We propose <strong>PACE</strong> (Policy Acceleration through Cached Execution), a training-free runtime that reuses observation representations and action computation across replanning calls and integration steps. Weights stay fixed.</p>
+      <p>Across two simulated benchmarks and two policies, PACE accelerates inference by up to 3.8× and improves dynamic task success by up to 42.8 percentage points over standard deployments, with the highest success in all eight dynamic settings. On a physical robot, PACE reduces per-chunk inference stalls from 159 to 69 ms.</p>
+    </div>
+  </section>
+
+  <section id="benchmarks" class="wrap">
+    <h2>Benchmarks</h2>
+    <div class="prose">
+      <p>Dynamic-LIBERO and Dynamic-RoboTwin extend LIBERO and RoboTwin with controlled target motion, while keeping task goals, target identities, and success checks. Dynamic-LIBERO has 50 tasks from ten skills, covering pick, place, and both, including curved paths. Dynamic-RoboTwin has 45 tasks from fifteen skills. During inference the world keeps moving, so latency shows up as closed-loop failure rather than a paused scene.</p>
+    </div>
+    <figure>
+      <img src="assets/benchmark_card.svg" alt="Dynamic-LIBERO and Dynamic-RoboTwin benchmark card.">
+      <figcaption>Task examples and the observation-to-action delay.</figcaption>
+    </figure>
+  </section>
+
+  <section id="framework" class="wrap">
+    <h2>Acceleration Framework</h2>
+    <figure>
+      <img src="assets/framework.png" alt="PACE on the VLA and WAM inference path.">
+      <figcaption>PACE along the VLA and WAM inference path. Green is the current quantity, blue is cached, and purple is computation.</figcaption>
+    </figure>
+  </section>
+
+  <section id="results" class="wrap">
+    <h2>Main Results</h2>
+    <div class="prose">
+      <p>PACE has the lowest mean inference latency in all four policy–benchmark pairs, and the highest success in all eight moving-target settings. The largest gain is FastWAM on Dynamic-LIBERO: latency falls from 598.6 ms to 159.1 ms, and success at <em>v</em><sub>1</sub> rises from 0.2% to 43.0%.</p>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <caption>Inference latency and task success under measured-delay evaluation. Bold marks the best value within each policy and benchmark.</caption>
+        <thead>
+          <tr>
+            <th class="left">Policy</th>
+            <th class="left">Method</th>
+            <th>Latency ↓ (ms)</th>
+            <th>Static ↑</th>
+            <th>Moving <em>v</em><sub>1</sub> ↑</th>
+            <th>Moving <em>v</em><sub>2</sub> ↑</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="group"><td colspan="6">Dynamic-LIBERO</td></tr>
+          <tr><td class="left" rowspan="4">FastWAM</td><td class="left">Baseline</td><td>598.6</td><td>0.4</td><td>0.2</td><td>0.8</td></tr>
+          <tr><td class="left">C<sup>3</sup>ache</td><td>268.1</td><td>12.0</td><td>4.0</td><td>4.0</td></tr>
+          <tr><td class="left">TaylorSeer</td><td>378.0</td><td>6.2</td><td>4.8</td><td>3.3</td></tr>
+          <tr class="ours"><td class="left">PACE (Ours)</td><td>159.1</td><td>82.4</td><td>43.0</td><td>27.8</td></tr>
+          <tr><td class="left" rowspan="4">π<sub>0.5</sub></td><td class="left">Baseline</td><td>320.7</td><td>95.0</td><td>69.6</td><td>45.2</td></tr>
+          <tr><td class="left">AdaVLA</td><td>153.8</td><td><b>96.2</b></td><td>75.8</td><td>58.6</td></tr>
+          <tr><td class="left">TaylorSeer</td><td>239.3</td><td>94.0</td><td>72.8</td><td>53.8</td></tr>
+          <tr class="ours"><td class="left">PACE (Ours)</td><td><b>97.3</b></td><td>94.2</td><td><b>81.2</b></td><td><b>65.9</b></td></tr>
+          <tr class="group"><td colspan="6">Dynamic-RoboTwin</td></tr>
+          <tr><td class="left" rowspan="4">FastWAM</td><td class="left">Baseline</td><td>300.7</td><td>64.0</td><td>47.1</td><td>31.5</td></tr>
+          <tr><td class="left">C<sup>3</sup>ache</td><td>221.1</td><td>62.2</td><td>45.6</td><td>30.0</td></tr>
+          <tr><td class="left">TaylorSeer</td><td>205.8</td><td>66.0</td><td>52.9</td><td>41.6</td></tr>
+          <tr class="ours"><td class="left">PACE (Ours)</td><td><b>105.1</b></td><td><b>68.0</b></td><td><b>54.0</b></td><td><b>43.3</b></td></tr>
+          <tr><td class="left" rowspan="4">π<sub>0.5</sub></td><td class="left">Baseline</td><td>299.3</td><td>38.7</td><td>30.4</td><td>20.7</td></tr>
+          <tr><td class="left">AdaVLA</td><td>124.4</td><td>28.9</td><td>17.8</td><td>22.2</td></tr>
+          <tr><td class="left">TaylorSeer</td><td>216.7</td><td>40.0</td><td>28.7</td><td>24.4</td></tr>
+          <tr class="ours"><td class="left">PACE (Ours)</td><td><b>82.3</b></td><td><b>46.2</b></td><td><b>44.4</b></td><td><b>28.9</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <figure>
+      <img src="assets/sr_curves.svg" alt="Success and latency across target speeds.">
+      <figcaption>Task success (solid) and mean model latency (dashed) as target speed increases. Bands are 95% task-stratified bootstrap intervals.</figcaption>
+    </figure>
+  </section>
+
+  <section id="real" class="wrap">
+    <h2>Real World</h2>
+    <div class="prose">
+      <p>On an AgileX Piper arm, π<sub>0.5</sub> runs box stacking, cup placing, and box fetching, each in a static and a dynamic variant. The same weights are used. PACE shortens each inference stall from 159 ms to 69 ms, and dynamic success counts match or exceed the baseline.</p>
+    </div>
+    <figure>
+      <img src="assets/realworld.svg" alt="Real-world tasks and inference stalls.">
+      <figcaption>Static and dynamic variants of T1–T3. Cyan is robot execution; yellow is the inference stall.</figcaption>
+    </figure>
+  </section>
+
+  <section id="demos" class="wrap">
+    <h2>Demos</h2>
+    <div class="demos">
+      <div class="demo">
+        <video src="assets/extra/catch_shuttlecock.mp4" autoplay muted loop playsinline></video>
+        <p>Catch the flying shuttlecock</p>
+      </div>
+      <div class="demo">
+        <video src="assets/extra/catch_bunny.mp4" autoplay muted loop playsinline></video>
+        <p>Catch the hopping bunny</p>
+      </div>
+      <div class="demo">
+        <video src="assets/extra/stop_rolling_orange.mp4" autoplay muted loop playsinline></video>
+        <p>Stop the rolling orange</p>
+      </div>
+      <div class="demo">
+        <video src="assets/extra/pursue_toycar.mp4" autoplay muted loop playsinline></video>
+        <p>Pursue the toy car</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="citation" class="wrap">
+    <h2>Citation</h2>
+    <pre>@inproceedings{worlddoesnotpause2026,
+  title={The World Does Not Pause: Real-Time Benchmarks and Training-Free Acceleration for Dynamic Manipulation},
+  year={2026}
+}</pre>
+  </section>
+
+  <footer class="wrap">MIT License. Code at github.com/RuoxiangHuang/TheWorldDoesNotPause.</footer>
+</body>
+</html>
